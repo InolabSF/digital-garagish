@@ -5,6 +5,9 @@ require './lib/assets/facebook_client'
 class WebhookController < ApplicationController
 
 
+  skip_before_filter :verify_authenticity_token
+
+
   def get_facebook
     verify_token = params['hub.verify_token']
     render 'no verify_token' and return unless verify_token == ENV['FB_VERIFY_TOKEN']
