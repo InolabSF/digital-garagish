@@ -50,19 +50,18 @@ class MessageHandler
   def post_message
     return nil unless @sender
 
+    facebook_client = FacebookClient.new
+
     case @sender.navigation_status
     when 0
-      facebook_client = FacebookClient.new
       facebook_client.post_message(@sender.facebook_id, 'Where is your current location?')
     when 1
       message = 'Are you here?'
       @sender.steps.each { |step| message = "#{message} (#{step.start_lat},#{step.start_lng})" and break if step.id == @sender.current_step_id }
-      facebook_client = FacebookClient.new
       facebook_client.post_message(@sender.facebook_id, message)
     when 2
-      'Let me know when you get there.'
+      message = 'Let me know when you get there.'
       @sender.steps.each { |step| message = "#{message} (#{step.end_lat},#{step.end_lng})" and break if step.id == @sender.current_step_id }
-      facebook_client = FacebookClient.new
       facebook_client.post_message(@sender.facebook_id, message)
     when 3
       'Congratulations! You got the destination.'
