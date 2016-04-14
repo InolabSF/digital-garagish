@@ -9,6 +9,7 @@ class Sender < ActiveRecord::Base
     sender = Sender.new
     sender.facebook_id = facebook_id
     sender.navigation_status = 0
+    sender.steps = Array.new
     sender.save if sender.valid?
     sender
   end

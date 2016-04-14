@@ -56,12 +56,18 @@ class MessageHandler
     when 0
       facebook_client.post_message(@sender.facebook_id, 'Where is your current location?')
     when 1
-      message = 'Are you here?'
-      @sender.steps.each { |step| message = "#{message} (#{step.start_lat},#{step.start_lng})" and break if step.id == @sender.current_step_id }
+      title = 'Are you here?'
+      subtitle = ''
+      @sender.steps.each { |step| subtitle = "(#{step.start_lat}, #{step.start_lng})" and break if step.id == @sender.current_step_id }
+      message = "{ 'attachment':{ 'type':'template', 'payload':{ 'template_type':'generic', 'elements':[ { 'title':'#{title}', 'image_url':'http://petersapparel.parseapp.com/img/item100-thumb.png', 'subtitle':'#{subtitle}', 'buttons':[ { 'type':'postback', 'title':'Yes' }, { 'type':'postback', 'title':'No' }, { 'type':'postback', 'title':'Stop navigation' } ] } ] } } }"
+
       facebook_client.post_message(@sender.facebook_id, message)
     when 2
-      message = 'Let me know when you get there.'
-      @sender.steps.each { |step| message = "#{message} (#{step.end_lat},#{step.end_lng})" and break if step.id == @sender.current_step_id }
+      title = 'Let me know when you get there.'
+      subtitle = ''
+      @sender.steps.each { |step| subtitle = "(#{step.end_lat}, #{step.end_lng})" and break if step.id == @sender.current_step_id }
+      message = "{ 'attachment':{ 'type':'template', 'payload':{ 'template_type':'generic', 'elements':[ { 'title':'#{title}', 'image_url':'http://petersapparel.parseapp.com/img/item100-thumb.png', 'subtitle':'#{subtitle}', 'buttons':[ { 'type':'postback', 'title':'I got there.' }, { 'type':'postback', 'title':'Stop Navigation' } ] } ] } } }"
+
       facebook_client.post_message(@sender.facebook_id, message)
     when 3
       'Congratulations! You got the destination.'
