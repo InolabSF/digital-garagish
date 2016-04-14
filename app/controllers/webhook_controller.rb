@@ -27,19 +27,8 @@ class WebhookController < ApplicationController
       sender_id = message['sender']['id']
       text = message['message']['text']
 
-      #facebook_client = FacebookClient.new
-      #json = facebook_client.post_message(sender_id, text)
-
-      token = ENV['FB_ACCESS_TOKEN']
-      endpoint_uri = "https://graph.facebook.com/v2.6/me/messages?access_token=" + token
-      request_content = {recipient: {id:sender_id},
-                         message: {text: text}
-                        }
-      content_json = request_content.to_json
-      json = RestClient.post(endpoint_uri, content_json, {
-        'Content-Type' => 'application/json; charset=UTF-8'
-      }){ |response, request, result, &block|
-      }
+      facebook_client = FacebookClient.new
+      json = facebook_client.post_message(sender_id, text)
     end
 
     render json: json
