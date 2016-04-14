@@ -10,36 +10,45 @@ project=/Users/kenzan8000/Dropbox/workspace/job/iSiD/digital-garagish CD=. filte
    }
    javascripts=javascripts {
     application.js
+    home.js
     webhook.js
    }
    stylesheets=stylesheets {
     application.css
+    home.scss
     webhook.scss
    }
   }
   controllers=controllers {
    application_controller.rb
+   home_controller.rb
    webhook_controller.rb
    concerns=concerns {
    }
   }
   helpers=helpers {
    application_helper.rb
+   home_helper.rb
    webhook_helper.rb
   }
   mailers=mailers {
   }
   models=models {
+   ability.rb
    sender.rb
    step.rb
+   user.rb
    concerns=concerns {
    }
   }
   views=views {
    webhook=webhook {
    }
+   home=home {
+    index.html.slim
+   }
    layouts=layouts {
-    application.html.erb
+    application.html.slim
    }
   }
  }
@@ -59,13 +68,16 @@ project=/Users/kenzan8000/Dropbox/workspace/job/iSiD/digital-garagish CD=. filte
    assets.rb
    backtrace_silencers.rb
    cookies_serializer.rb
+   devise.rb
    filter_parameter_logging.rb
    inflections.rb
    mime_types.rb
+   rails_admin.rb
    session_store.rb
    wrap_parameters.rb
   }
   locales=locales {
+   devise.en.yml
    en.yml
   }
  }
@@ -74,6 +86,8 @@ project=/Users/kenzan8000/Dropbox/workspace/job/iSiD/digital-garagish CD=. filte
   migrate=migrate {
    20160414201105_create_senders.rb
    20160414201811_create_steps.rb
+   20160414215306_devise_create_users.rb
+   20160414215608_add_admin_to_user.rb
   }
  }
  lib=lib {
@@ -88,11 +102,13 @@ project=/Users/kenzan8000/Dropbox/workspace/job/iSiD/digital-garagish CD=. filte
  test=test {
   test_helper.rb
   controllers=controllers {
+   home_controller_test.rb
    webhook_controller_test.rb
   }
   fixtures=fixtures {
    senders.yml
    steps.yml
+   users.yml
   }
   helpers=helpers {
   }
@@ -103,6 +119,7 @@ project=/Users/kenzan8000/Dropbox/workspace/job/iSiD/digital-garagish CD=. filte
   models=models {
    sender_test.rb
    step_test.rb
+   user_test.rb
   }
  }
 }
