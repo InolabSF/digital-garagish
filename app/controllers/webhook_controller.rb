@@ -16,14 +16,13 @@ class WebhookController < ApplicationController
 
 
   def post_facebook
-    message = params['entry'][0]['messaging'][0]
     json = {}
+
+    message = params['entry'][0]['messaging'][0]
     if message.include?('message')
 
       sender_id = message['sender']['id']
       text = message['message']['text']
-      puts '/////////////////////////////sender_id'
-      puts sender_id
 
       facebook_client = FacebookClient.new
       json = facebook_client.post_message(sender_id, text)
