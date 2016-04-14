@@ -27,8 +27,8 @@ class WebhookController < ApplicationController
       sender_id = message['sender']['id']
       text = message['message']['text']
 
-      facebook_client = FacebookClient.new
-      json = facebook_client.post_message(sender_id, text)
+      #facebook_client = FacebookClient.new
+      #json = facebook_client.post_message(sender_id, text)
     end
 
     render json: json
