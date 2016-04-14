@@ -1,5 +1,4 @@
-require './lib/assets/google_client'
-require './lib/assets/facebook_client'
+require './lib/assets/message_handler'
 
 
 class WebhookController < ApplicationController
@@ -24,11 +23,18 @@ class WebhookController < ApplicationController
     message = params['entry'][0]['messaging'][0]
     if message.include?('message')
 
-      sender_id = message['sender']['id']
+      facebook_id = message['sender']['id']
       text = message['message']['text']
 
-      facebook_client = FacebookClient.new
-      json = facebook_client.post_message(sender_id, text)
+      sender = Sender.find_by_facebook_id facebook_id
+      if sender
+        message_handler = MessageHandler.new(facebook_id)
+        json = message_handler.handle_message(text)
+      else
+        Sender.recreate(facebook_id)
+        message_handler = MessageHandler.new(facebook_id)
+        json = message_handler.post_message
+      end
     end
 
     render json: json
