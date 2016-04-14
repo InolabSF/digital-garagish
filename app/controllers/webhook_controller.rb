@@ -1,3 +1,7 @@
+require './lib/assets/google_client'
+require './lib/assets/facebook_client'
+
+
 class WebhookController < ApplicationController
 
 
@@ -12,8 +16,15 @@ class WebhookController < ApplicationController
 
 
   def post_facebook
-    entries = params[:entry]
-    render :status => 401 and return unless entries || entries.count
+    message = params['entry'][0]['messaging'][0]
+    if message.include?('message')
+
+      sender_id = message['sender']['id']
+      text = message['message']['text']
+
+      facebook_client = FacebookClient.new
+      facebook_client.post_message(sender_id, text)
+    end
 
     render :status => 200
   end

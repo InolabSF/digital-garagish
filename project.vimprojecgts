@@ -68,6 +68,7 @@ project=/Users/kenzan8000/Dropbox/workspace/job/iSiD/digital-garagish CD=. filte
  lib=lib {
   assets=assets {
    google_client.rb
+   facebook_client.rb
   }
   tasks=tasks {
   }
