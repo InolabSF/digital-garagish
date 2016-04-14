@@ -310,7 +310,6 @@ DEPENDENCIES
   rails (= 4.2.6)
   rails_admin
   redcarpet
-  rest-client
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)
   slim-rails

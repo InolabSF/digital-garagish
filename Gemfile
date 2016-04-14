@@ -10,7 +10,6 @@ gem 'jbuilder', '~> 2.0'                                        # json
 gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'whenever', :require => false                               # cron
 gem 'faraday'                                                   # http client
-gem 'rest-client'
 gem 'devise'                                                    # authentication
 gem 'cancan'                                                    # authentication
 gem 'rails_admin'                                               # admin
