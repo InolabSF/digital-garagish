@@ -82,9 +82,13 @@ class MessageHandler
       if message == 'Yes'
         @sender.navigation_status += 1
         @sender.save if @sender.valid?
+        post_message
       elsif message == 'No'
+        Sender.recreate(@sender.facebook_id)
+        post_message
       elsif message == 'Stop navigation'
         Sender.recreate(@sender.facebook_id)
+        post_message
       end
     when 2
       if message == 'I got there'
@@ -96,8 +100,10 @@ class MessageHandler
           @sender.navigation_status += 1
           @sender.save if @sender.valid?
         end
+        post_message
       elsif message == 'Stop navigation'
         Sender.recreate(@sender.facebook_id)
+        post_message
       end
     when 3
       nil
