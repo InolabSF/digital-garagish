@@ -28,18 +28,10 @@ class MessageHandler
   def receive_message(message)
     case @sender.navigation_status
     when 0
-      nil
+      @sender.navigation_status += 1
+      @sender.save if @sender.valid?
     when 1
       nil
-    when 1
-      start_lat = 37.7844688
-      start_lng = -122.4079864
-      set_directions(start_lat, start_lng)
-      if @sender.steps.count > 0
-        @sender.current_step_id = @sender.steps.first.id
-        @sender.navigation_status += 1
-        @sender.save if @sender.valid?
-      end
     when 2
       nil
     else
