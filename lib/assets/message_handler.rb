@@ -28,8 +28,7 @@ class MessageHandler
   def receive_message(message)
     case @sender.navigation_status
     when 0
-      @sender.navigation_status += 1
-      @sender.save if @sender.valid?
+      nil
     when 1
       nil
     when 2
@@ -47,6 +46,9 @@ class MessageHandler
 
     case @sender.navigation_status
     when 0
+      @sender.navigation_status += 1
+      @sender.save if @sender.valid?
+
       facebook_client.post_message(@sender.facebook_id, "{ 'text' : 'Where is your current location?' }")
     when 1
       title = 'Are you here?'
