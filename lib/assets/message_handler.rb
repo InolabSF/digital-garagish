@@ -28,6 +28,9 @@ class MessageHandler
   def receive_message(message)
     case @sender.navigation_status
     when 0
+      @sender.navigation_status += 1
+      @sender.save if @sender.valid?
+    when 1
       start_lat = 37.7844688
       start_lng = -122.4079864
       set_directions(start_lat, start_lng)
@@ -36,8 +39,6 @@ class MessageHandler
         @sender.navigation_status += 1
         @sender.save if @sender.valid?
       end
-    when 1
-      nil
     when 2
       nil
     else
@@ -60,6 +61,9 @@ class MessageHandler
       facebook_client.post_message(@sender.facebook_id, message)
     when 2
       'Let me know when you get there.'
+      @sender.steps.each { |step| message = "#{message} (#{step.end_lat},#{step.end_lng})" and break if step.id == @sender.current_step_id }
+      facebook_client = FacebookClient.new
+      facebook_client.post_message(@sender.facebook_id, message)
     when 3
       'Congratulations! You got the destination.'
     else
