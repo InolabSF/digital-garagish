@@ -26,15 +26,19 @@ class WebhookController < ApplicationController
       facebook_id = message['sender']['id']
       text = message['message']['text']
 
-      sender = Sender.find_by_facebook_id facebook_id
-      if sender
-        message_handler = MessageHandler.new(facebook_id)
-        json = message_handler.handle_message(text)
-      else
-        Sender.recreate(facebook_id)
-        message_handler = MessageHandler.new(facebook_id)
-        json = message_handler.post_message
-      end
+      #sender = Sender.find_by_facebook_id facebook_id
+      #if sender
+      #  message_handler = MessageHandler.new(facebook_id)
+      #  json = message_handler.handle_message(text)
+      #else
+      #  Sender.recreate(facebook_id)
+      #  message_handler = MessageHandler.new(facebook_id)
+      #  json = message_handler.post_message
+      #end
+
+      Sender.recreate(facebook_id)
+      message_handler = MessageHandler.new(facebook_id)
+      json = message_handler.post_message
     end
 
     render json: json

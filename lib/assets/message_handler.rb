@@ -71,7 +71,7 @@ class MessageHandler
   # set_directions
   def set_directions(start_lat, start_lng)
     # no sender
-    return [] unless sender
+    return [] unless @sender
 
     # direction (steps for DG)
     dg_lat = 37.7868614
@@ -81,7 +81,7 @@ class MessageHandler
     json_steps = google_client.parse_get_directions_steps(json)
     json_steps.each do |json_step|
       step = Step.new
-      step.sender_id = sender.id
+      step.sender_id = @sender.id
       step.start_lat = json_step['start_location']['lat'].to_f
       step.start_lng = json_step['start_location']['lng'].to_f
       step.end_lat = json_step['end_location']['lat'].to_f
@@ -92,10 +92,10 @@ class MessageHandler
       step.travel_mode = json_step['travel_mode']
       if step.valid?
         step.save
-        sender.steps << step
+        @sender.steps << step
       end
     end
-    sender.steps
+    @sender.steps
   end
 
 end
