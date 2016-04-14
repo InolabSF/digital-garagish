@@ -21,8 +21,7 @@ class FacebookClient
     response = connection.get do |request|
       request.params['access_token'] = @access_token
       request.headers['Content-Type'] = 'application/json'
-      #request.body = "{ \"recipient\" : { \"id\" : #{sender_id} }, \"message\" : { \"text\" : #{text} }"
-      request.body = { :recipient => { :id => sender_id }, :message => { :text => text } }
+      request.body = "{ \"recipient\" : { \"id\" : #{sender_id} }, \"message\" : { \"text\" : #{text} }"
     end
 
    JSON.parse(response.body)
