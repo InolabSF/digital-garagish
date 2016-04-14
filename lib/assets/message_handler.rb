@@ -54,7 +54,7 @@ class MessageHandler
 
     case @sender.navigation_status
     when 0
-      facebook_client.post_message(@sender.facebook_id, 'Where is your current location?')
+      facebook_client.post_message(@sender.facebook_id, "{ 'text' : 'Where is your current location?' }")
     when 1
       title = 'Are you here?'
       subtitle = ''
