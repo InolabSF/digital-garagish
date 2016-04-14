@@ -35,6 +35,10 @@ class WebhookController < ApplicationController
         message_handler = MessageHandler.new(facebook_id)
         json = message_handler.post_message
       end
+    elsif message.include?('postback')
+        text = message['postback']
+        message_handler = MessageHandler.new(facebook_id)
+        json = message_handler.handle_postback(text)
     end
 
     render json: json
