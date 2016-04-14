@@ -22,9 +22,9 @@ class FacebookClient
       request.params['access_token'] = @access_token
       request.headers['Content-Type'] = 'application/json'
       request.body = "{ 'recipient' : { 'id' : '#{sender_id}' }, 'message' : { 'text' : '#{text}' } }"
+    end
 
    JSON.parse(response.body)
-
 
    #token = ENV['FB_ACCESS_TOKEN']
    #endpoint_uri = "https://graph.facebook.com/v2.6/me/messages?access_token=" + token
