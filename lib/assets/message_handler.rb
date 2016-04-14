@@ -10,33 +10,11 @@ class MessageHandler
     @sender = Sender.find_by_facebook_id facebook_id
   end
 
-  # handle
-  def handle_message(message)
-    return handle_error unless @sender
-
-    receive_message(message)
-    post_message
-  end
-
   # handle_error
   def handle_error
     'Sorry. I am not sure what you meant.'
   end
 
-
-  # receive_message
-  def receive_message(message)
-    case @sender.navigation_status
-    when 0
-      nil
-    when 1
-      nil
-    when 2
-      nil
-    else
-      nil
-    end
-  end
 
   # post_message
   def post_message
@@ -46,11 +24,16 @@ class MessageHandler
 
     case @sender.navigation_status
     when 0
-      @sender.navigation_status += 1
-      @sender.save if @sender.valid?
-
       facebook_client.post_message(@sender.facebook_id, "{ 'text' : 'Where is your current location?' }")
     when 1
+      start_lat = 37.7844688
+      start_lng = -122.4079864
+      set_directions(start_lat, start_lng)
+      if @sender.steps.count > 0
+        @sender.current_step_id = @sender.steps.first.id
+        @sender.save if @sender.valid?
+      end
+
       title = 'Are you here?'
       subtitle = ''
       @sender.steps.each { |step| subtitle = "(#{step.start_lat}, #{step.start_lng})" and break if step.id == @sender.current_step_id }
@@ -66,7 +49,7 @@ class MessageHandler
 
       facebook_client.post_message(@sender.facebook_id, message)
     when 3
-      'Congratulations! You got the destination.'
+      facebook_client.post_message(@sender.facebook_id, "{ 'text' : 'Congratulations! You got the destination.' }")
     else
       nil
     end
@@ -92,20 +75,14 @@ class MessageHandler
       end
     when 2
       if message == 'I got there'
-        start_lat = 37.7844688
-        start_lng = -122.4079864
-        set_directions(start_lat, start_lng)
-        if @sender.steps.count > 0
-          @sender.current_step_id = @sender.steps.first.id
-          @sender.navigation_status += 1
-          @sender.save if @sender.valid?
-        end
         post_message
       elsif message == 'Stop navigation'
         Sender.recreate(@sender.facebook_id)
         post_message
       end
     when 3
+      nil
+    else
       nil
     end
   end
