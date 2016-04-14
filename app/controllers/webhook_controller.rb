@@ -4,8 +4,10 @@ class WebhookController < ApplicationController
   def get_facebook
     verify_token = params['hub.verify_token']
     render :status => 401 and return unless verify_token == ENV['FB_VERIFY_TOKEN']
+    challenge = params['hub.challenge']
+    render :status => 401 and return unless challenge
 
-    render verify_token
+    render json: challenge
   end
 
 

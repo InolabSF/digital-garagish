@@ -1,0 +1,90 @@
+project=/Users/kenzan8000/Dropbox/workspace/job/iSiD/digital-garagish CD=. filter="*.rb *.yml *.html *.css *.sass *.scss *.haml Gemfile .gitignore *.md *.json *.txt *.ru *.js Rakefile *.csv *.m *.h *.mm *.cc *.hpp *.cpp *.pch Podfile *.sh *.py .gitignore *.plist *.strings *.swift *.jade *.py *.erb *.slim" {
+ Gemfile
+ README.md
+ cheat_sheet.md
+ config.ru
+ Rakefile
+ app=app {
+  assets=assets {
+   images=images {
+   }
+   javascripts=javascripts {
+    application.js
+   }
+   stylesheets=stylesheets {
+    application.css
+   }
+  }
+  controllers=controllers {
+   application_controller.rb
+   webhook_controller.rb
+   concerns=concerns {
+   }
+  }
+  helpers=helpers {
+   application_helper.rb
+  }
+  mailers=mailers {
+  }
+  models=models {
+   concerns=concerns {
+   }
+  }
+  views=views {
+   layouts=layouts {
+    application.html.erb
+   }
+  }
+ }
+ config=config {
+  application.rb
+  boot.rb
+  environment.rb
+  routes.rb
+  database.yml
+  secrets.yml
+  environments=environments {
+   development.rb
+   production.rb
+   test.rb
+  }
+  initializers=initializers {
+   assets.rb
+   backtrace_silencers.rb
+   cookies_serializer.rb
+   filter_parameter_logging.rb
+   inflections.rb
+   mime_types.rb
+   session_store.rb
+   wrap_parameters.rb
+  }
+  locales=locales {
+   en.yml
+  }
+ }
+ db=db {
+  seeds.rb
+ }
+ lib=lib {
+  assets=assets {
+   google_client.rb
+  }
+  tasks=tasks {
+  }
+ }
+ test=test {
+  test_helper.rb
+  controllers=controllers {
+  }
+  fixtures=fixtures {
+  }
+  helpers=helpers {
+  }
+  integration=integration {
+  }
+  mailers=mailers {
+  }
+  models=models {
+  }
+ }
+}
