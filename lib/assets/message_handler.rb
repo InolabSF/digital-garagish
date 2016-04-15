@@ -179,36 +179,15 @@ class MessageHandler
       @sender.current_step_id = @sender.steps.first.id
       @sender.save if @sender.valid?
     else
-      #@sender.steps.each_with_index do |step, i|
-      #  next unless @sender.current_step_id == step.id
-      #  index = i + 1
-      #  # next navigation status
-      #  @sender.navigation_status += 1 and break if index >= @sender.steps.count
-      #  # next step
-      #  @sender.current_step_id = @sender.steps[index].id and break
-      #end
-
-      #for i in 0..@sender.steps.count
-      #  next unless @sender.current_step_id == @sender.steps[i].id
-      #  index = i + 1
-      #  # next navigation status
-      #  @sender.navigation_status += 1 and break if index >= @sender.steps.count
-      #  # next step
-      #  @sender.current_step_id = @sender.steps[index].id and break
-      #end
-
-      #steps = Step.where(sender_id: @sender.id)
-      #for i in 0..steps.count
-      #  next unless @sender.current_step_id == steps[i].id
-      #  index = i + 1
-      #  # next navigation status
-      #  @sender.navigation_status += 1 and break if index >= steps.count
-      #  # next step
-      #  @sender.current_step_id = steps[index].id and break
-      #end
-
-      @sender.current_step_id = @sender.steps.last.id
-
+      steps = Step.where(sender_id: @sender.id)
+      for i in 0..steps.count
+        next unless @sender.current_step_id == steps[i].id
+        index = i + 1
+        # next navigation status
+        @sender.navigation_status += 1 and break if index >= steps.count
+        # next step
+        @sender.current_step_id = "#{steps[index].id}" and break
+      end
       @sender.save if @sender.valid?
     end
     #set_streetview
