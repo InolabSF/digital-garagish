@@ -191,6 +191,7 @@ class MessageHandler
       else
         @sender.current_step_id = @sender.steps[index].id
       end
+      @sender.save if @sender.valid?
 
       #@sender.current_step_id = "#{@sender.current_step_id.to_i + 1}"
       #@sender.navigation_status += 1 if @sender.current_step_id > @sender.steps.last.id
