@@ -180,7 +180,7 @@ class MessageHandler
       @sender.save if @sender.valid?
     else
       index = nil
-      for i in 0..@sender.steps.count
+      for i in 0...@sender.steps.count
         index = i+1 and break if @sender.steps[i].id == @sender.current_step_id
       end
 
