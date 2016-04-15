@@ -39,9 +39,11 @@ class MessageHandler
 
       title = 'Are you here?'
       subtitle = ''
+      google_client = GoogleClient.new(@server_key)
+      img = google_client.get_streetview(start_lat, start_lng, 180.0)
       @sender.steps.each { |step| subtitle = "(#{step.start_lat}, #{step.start_lng})" and break if step.id == @sender.current_step_id }
 
-      message = "{ 'attachment':{ 'type':'template', 'payload':{ 'template_type':'generic', 'elements':[ { 'title':'#{title}', 'image_url':'http://petersapparel.parseapp.com/img/item100-thumb.png', 'subtitle':'#{subtitle}', 'buttons':[ { 'type':'postback', 'title':'Yes', 'payload':'Yes' }, { 'type':'postback', 'title':'No', 'payload':'No' }, { 'type':'postback', 'title':'Stop navigation', 'payload':'Stop navigation' } ] } ] } } }"
+      message = "{ 'attachment':{ 'type':'template', 'payload':{ 'template_type':'generic', 'elements':[ { 'title':'#{title}', 'image_url':'#{img}', 'subtitle':'#{subtitle}', 'buttons':[ { 'type':'postback', 'title':'Yes', 'payload':'Yes' }, { 'type':'postback', 'title':'No', 'payload':'No' }, { 'type':'postback', 'title':'Stop navigation', 'payload':'Stop navigation' } ] } ] } } }"
 
       facebook_client.post_message(@sender.facebook_id, message)
     when 2
@@ -70,17 +72,17 @@ class MessageHandler
         @sender.save if @sender.valid?
         post_message
       elsif message == 'No'
-        Sender.recreate(@sender.facebook_id)
+        @sender = Sender.recreate(@sender.facebook_id)
         post_message
       elsif message == 'Stop navigation'
-        Sender.recreate(@sender.facebook_id)
+        @sender = Sender.recreate(@sender.facebook_id)
         post_message
       end
     when 2
       if message == 'I got there'
         post_message
       elsif message == 'Stop navigation'
-        Sender.recreate(@sender.facebook_id)
+        @sender = Sender.recreate(@sender.facebook_id)
         post_message
       end
     when 3
@@ -119,6 +121,7 @@ class MessageHandler
       end
     end
 
+    @sender.save if @sender.valid?
     @sender.steps
   end
 
