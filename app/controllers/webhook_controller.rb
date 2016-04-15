@@ -31,10 +31,6 @@ class WebhookController < ApplicationController
 
       message_handler = MessageHandler.new(facebook_id)
       json = message_handler.post_message
-      if sender.navigation_status == 0
-        sender.navigation_status = 1
-        sender.save if @sender.valid?
-      end
 
     # postback
     elsif message.include?('postback')

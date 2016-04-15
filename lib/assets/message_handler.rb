@@ -24,7 +24,10 @@ class MessageHandler
 
     case @sender.navigation_status
     when 0
-      facebook_client.post_message(@sender.facebook_id, "{ 'text' : 'Where is your current location?' }")
+      json = facebook_client.post_message(@sender.facebook_id, "{ 'text' : 'Where is your current location?' }")
+      @sender.navigation_status = 1
+      @sender.save if @sender.valid?
+      json
     when 1
       start_lat = 37.7844688
       start_lng = -122.4079864
