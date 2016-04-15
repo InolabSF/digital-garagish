@@ -133,7 +133,7 @@ class MessageHandler
     # current step
     current_step = Step.find_by_id(@sender.current_step_id)
     return unless current_step
-    return if current_step.images && current_step.images.count >= 2
+    return if current_step.images.count >= 2
 
     # upload streetview images of start & end coordinates
     google_client = GoogleClient.new(@server_key)
@@ -180,15 +180,13 @@ class MessageHandler
       @sender.save if @sender.valid?
     else
       index = nil
-      for i in 0..@sender.steps.count
-        index = i and break if @sender.current_step_id == @sender.steps[i].id
+      steps = Step.where(:sender_id => @sender.id)
+      steps.each_with_index do |step, i|
+        index = i and break if @sender.current_step_id == step.id
       end
-      #@sender.steps.each_with_index do |step, i|
-      #  index = i and break if @sender.current_step_id == step.id
-      #end
       if index
-        if index+1 < @sender.steps.count
-          @sender.current_step_id = @sender.steps[index+1].id
+        if index+1 < steps.count
+          @sender.current_step_id = steps[index+1].id
         else
           @sender.navigation_status += 1
         end
