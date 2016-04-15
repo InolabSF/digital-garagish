@@ -174,16 +174,18 @@ class MessageHandler
   def set_current_step
     return false unless @sender
     return false unless @sender.steps
-    return false unless @sender.steps.count
 
     unless @sender.current_step_id
       @sender.current_step_id = @sender.steps.first.id
       @sender.save if @sender.valid?
     else
       index = nil
-      @sender.steps.each_with_index do |step, i|
-        index = i and break if @sender.current_step_id == step.id
+      for i in 0..@sender.steps.count
+        index = i and break if @sender.current_step_id == @sender.steps[i].id
       end
+      #@sender.steps.each_with_index do |step, i|
+      #  index = i and break if @sender.current_step_id == step.id
+      #end
       if index
         if index+1 < @sender.steps.count
           @sender.current_step_id = @sender.steps[index+1].id
