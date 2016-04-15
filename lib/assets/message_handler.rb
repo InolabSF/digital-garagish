@@ -33,14 +33,14 @@ class MessageHandler
       start_lat = 37.7844688
       start_lng = -122.4079864
       set_directions(start_lat, start_lng)
-      return {} unless set_current_step
+      set_current_step
 
       title = 'Are you here?'
       subtitle = ''
       current_step = Step.find_by_id(@sender.current_step_id)
       subtitle = "(#{current_step.start_lat}, #{current_step.start_lng})" if current_step
-      #img_uri = 'https://dl.dropboxusercontent.com/u/30701586/images/digital-garagish/streetview_00.jpeg'
-      img_uri = (current_step.images && current_step.images.count > 0) ? current_step.images[0].uri : ''
+      img_uri = 'https://dl.dropboxusercontent.com/u/30701586/images/digital-garagish/streetview_00.jpeg'
+      #img_uri = (current_step.images && current_step.images.count > 0) ? current_step.images[0].uri : ''
       message = "{ 'attachment':{ 'type':'template', 'payload':{ 'template_type':'generic', 'elements':[ { 'title':'#{title}', 'image_url':'#{img_uri}', 'subtitle':'#{subtitle}', 'buttons':[ { 'type':'postback', 'title':'Yes', 'payload':'Yes' }, { 'type':'postback', 'title':'No', 'payload':'No' }, { 'type':'postback', 'title':'Stop navigation', 'payload':'Stop navigation' } ] } ] } } }"
 
       facebook_client.post_message(@sender.facebook_id, message)
@@ -49,8 +49,8 @@ class MessageHandler
       subtitle = ''
       current_step = Step.find_by_id(@sender.current_step_id)
       subtitle = "#{current_step.html_instructions} #{current_step.distance_text} #{current_step.duration_text}" if current_step
-      #img_uri = 'https://dl.dropboxusercontent.com/u/30701586/images/digital-garagish/streetview_01.jpeg'
-      img_uri = (current_step.images && current_step.images.count >= 2) ? current_step.images[1].uri : ''
+      img_uri = 'https://dl.dropboxusercontent.com/u/30701586/images/digital-garagish/streetview_01.jpeg'
+      #img_uri = (current_step.images && current_step.images.count >= 2) ? current_step.images[1].uri : ''
       message = "{ 'attachment':{ 'type':'template', 'payload':{ 'template_type':'generic', 'elements':[ { 'title':'#{title}', 'image_url':'#{img_uri}', 'subtitle':'#{subtitle}', 'buttons':[ { 'type':'postback', 'title':'I got there', 'payload':'I got there' }, { 'type':'postback', 'title':'Stop navigation', 'payload':'Stop navigation' } ] } ] } } }"
 
       facebook_client.post_message(@sender.facebook_id, message)
@@ -131,7 +131,6 @@ class MessageHandler
   # set_streetview
   def set_streetview
     # current step
-    return unless @sender || @sender.current_step_id
     current_step = Step.find_by_id(@sender.current_step_id)
     return unless current_step
     return if current_step.images && current_step.images.count >= 2
@@ -194,8 +193,7 @@ class MessageHandler
         @sender.save if @sender.valid?
       end
     end
-
-    set_streetview
+    #set_streetview
     true
   end
 
