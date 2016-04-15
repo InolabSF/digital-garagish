@@ -30,8 +30,6 @@ class MessageHandler
       @sender.save if @sender.valid?
       json
     when 1
-      return nil if @sender.steps.count
-
       start_lat = 37.7844688
       start_lng = -122.4079864
       set_directions(start_lat, start_lng)
@@ -39,8 +37,7 @@ class MessageHandler
 
       title = 'Are you here?'
       subtitle = ''
-      #current_step = Step.find_by_id(@sender.current_step_id)
-      current_step = @sender.steps[@sender.current_step_id]
+      current_step = Step.find_by_id(@sender.current_step_id)
       subtitle = "(#{current_step.start_lat}, #{current_step.start_lng})" if current_step
       img_uri = 'https://dl.dropboxusercontent.com/u/30701586/images/digital-garagish/streetview_00.jpeg'
       #img_uri = (current_step.images && current_step.images.count > 0) ? current_step.images[0].uri : ''
@@ -50,8 +47,7 @@ class MessageHandler
     when 2
       title = 'Let me know when you get there.'
       subtitle = ''
-      #current_step = Step.find_by_id(@sender.current_step_id)
-      current_step = @sender.steps[@sender.current_step_id]
+      current_step = Step.find_by_id(@sender.current_step_id)
       subtitle = "#{current_step.html_instructions} #{current_step.distance_text} #{current_step.duration_text}" if current_step
       img_uri = 'https://dl.dropboxusercontent.com/u/30701586/images/digital-garagish/streetview_01.jpeg'
       #img_uri = (current_step.images && current_step.images.count >= 2) ? current_step.images[1].uri : ''
@@ -135,8 +131,7 @@ class MessageHandler
   # set_streetview
   def set_streetview
     # current step
-    #current_step = Step.find_by_id(@sender.current_step_id)
-    current_step = @sender.steps[@sender.current_step_id]
+    current_step = Step.find_by_id(@sender.current_step_id)
     return unless current_step
     return if current_step.images.count >= 2
 
@@ -181,13 +176,21 @@ class MessageHandler
     return false unless @sender.steps
 
     unless @sender.current_step_id
-      #@sender.current_step_id = @sender.steps.first.id
-      @sender.current_step_id = 0
+      @sender.current_step_id = @sender.steps.first.id
       @sender.save if @sender.valid?
     else
-      index = @sender.current_step_id + 1
-      @sender.navigation_status += 1 if index >= @sender.steps.count
-      @sender.current_step_id = index
+      index = nil
+      for i in 0..@sender.steps.count
+        index = i+1 and break if @sender.steps[i].id == @sender.current_step_id
+      end
+
+      unless index
+        @sender.current_step_id = @sender.steps.last.id
+      elsif index >= @sender.steps.count
+        @sender.navigation_status += 1
+      else
+        @sender.current_step_id = @sender.steps[index].id
+      end
       @sender.save if @sender.valid?
     end
     #set_streetview
