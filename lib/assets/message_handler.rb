@@ -1,5 +1,6 @@
 require './lib/assets/google_client'
 require './lib/assets/facebook_client'
+require './lib/assets/facebook_client'
 
 
 class MessageHandler
@@ -32,16 +33,14 @@ class MessageHandler
       start_lat = 37.7844688
       start_lng = -122.4079864
       set_directions(start_lat, start_lng)
-      if @sender.steps.count > 0
-        @sender.current_step_id = @sender.steps.first.id
-        @sender.save if @sender.valid?
-      end
+      return {} unless set_current_step
 
       title = 'Are you here?'
       subtitle = ''
       current_step = Step.find_by_id(@sender.current_step_id)
       subtitle = "(#{current_step.start_lat}, #{current_step.start_lng})" if current_step
-      img_uri = 'https://dl.dropboxusercontent.com/u/30701586/images/digital-garagish/streetview_00.jpeg'
+      #img_uri = 'https://dl.dropboxusercontent.com/u/30701586/images/digital-garagish/streetview_00.jpeg'
+      img_uri = (current_step.images && current_step.images.count > 0) ? current_step.images[0].uri : ''
       message = "{ 'attachment':{ 'type':'template', 'payload':{ 'template_type':'generic', 'elements':[ { 'title':'#{title}', 'image_url':'#{img_uri}', 'subtitle':'#{subtitle}', 'buttons':[ { 'type':'postback', 'title':'Yes', 'payload':'Yes' }, { 'type':'postback', 'title':'No', 'payload':'No' }, { 'type':'postback', 'title':'Stop navigation', 'payload':'Stop navigation' } ] } ] } } }"
 
       facebook_client.post_message(@sender.facebook_id, message)
@@ -50,11 +49,13 @@ class MessageHandler
       subtitle = ''
       current_step = Step.find_by_id(@sender.current_step_id)
       subtitle = "#{current_step.html_instructions} #{current_step.distance_text} #{current_step.duration_text}" if current_step
-      img_uri = 'https://dl.dropboxusercontent.com/u/30701586/images/digital-garagish/streetview_01.jpeg'
+      #img_uri = 'https://dl.dropboxusercontent.com/u/30701586/images/digital-garagish/streetview_01.jpeg'
+      img_uri = (current_step.images && current_step.images.count >= 2) ? current_step.images[1].uri : ''
       message = "{ 'attachment':{ 'type':'template', 'payload':{ 'template_type':'generic', 'elements':[ { 'title':'#{title}', 'image_url':'#{img_uri}', 'subtitle':'#{subtitle}', 'buttons':[ { 'type':'postback', 'title':'I got there', 'payload':'I got there' }, { 'type':'postback', 'title':'Stop navigation', 'payload':'Stop navigation' } ] } ] } } }"
 
       facebook_client.post_message(@sender.facebook_id, message)
     when 3
+      @sender.destroy if @sender
       facebook_client.post_message(@sender.facebook_id, "{ 'text' : 'Congratulations! You got the destination.' }")
     else
       nil
@@ -81,6 +82,7 @@ class MessageHandler
       end
     when 2
       if message == 'I got there'
+        set_current_step
         post_message
       elsif message == 'Stop navigation'
         @sender = Sender.recreate(@sender.facebook_id)
@@ -124,6 +126,77 @@ class MessageHandler
 
     @sender.save if @sender.valid?
     @sender.steps
+  end
+
+  # set_streetview
+  def set_streetview
+    # current step
+    return unless @sender || @sender.current_step_id
+    current_step = Step.find_by_id(@sender.current_step_id)
+    return unless current_step
+    return if current_step.images && current_step.images.count >= 2
+
+    # upload streetview images of start & end coordinates
+    google_client = GoogleClient.new(@server_key)
+    coordinates = [ {:lat => current_step.start_lat, :lng => current_step.start_lng}, {:lat => current_step.end_lat, :lng => current_step.end_lng} ]
+    width = 320; height = 320; degree = 180
+    coordinates.each do |coordinate|
+      # get image binary from street view
+      lat = coordinate[:lat]
+      lng = coordinate[:lng]
+      image_file = google_client.get_streetview(lat, lng, degree, width, height)
+      next unless image_file
+
+      name = "#{lat}_#{lng}_#{degree}"
+
+      # upload image
+      uploader = ImageUploader.new
+      uploader.store!(image_file)
+      uri = uploader.url
+      next unless uri
+
+      # create image
+      image = Image.new
+      image.uri = uri
+      image.name = name
+      image.width = width
+      image.height = height
+      image.step_id = current_step.id
+      if image.valid?
+        image.save
+        current_step.images << image
+      end
+    end
+
+    current_step.save if current_step.valid?
+  end
+
+  # set current step
+  def set_current_step
+    return false unless @sender
+    return false unless @sender.steps
+    return false unless @sender.steps.count
+
+    unless @sender.current_step_id
+      @sender.current_step_id = @sender.steps.first.id
+      @sender.save if @sender.valid?
+    else
+      index = nil
+      @sender.steps.each_with_index do |step, i|
+        index = i and break if @sender.current_step_id == step.id
+      end
+      if index
+        if index+1 < @sender.steps.count
+          @sender.current_step_id = @sender.steps[index+1].id
+        else
+          @sender.navigation_status += 1
+        end
+        @sender.save if @sender.valid?
+      end
+    end
+
+    set_streetview
+    true
   end
 
 end
