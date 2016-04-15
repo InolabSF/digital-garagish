@@ -21,12 +21,12 @@ class WebhookController < ApplicationController
     json = {}
 
     message = params['entry'][0]['messaging'][0]
-    facebook_id = message['sender']['id']
-    sender = Sender.find_by_facebook_id facebook_id
-    sender = Sender.recreate(facebook_id) unless sender
 
     # message
-    if message.include?('message')
+    if message.include?('message') && message['message']['text']
+      facebook_id = message['sender']['id']
+      sender = Sender.find_by_facebook_id facebook_id
+      sender = Sender.recreate(facebook_id) unless sender
       #text = message['message']['text']
 
       message_handler = MessageHandler.new(facebook_id)
@@ -38,6 +38,9 @@ class WebhookController < ApplicationController
 
     # postback
     elsif message.include?('postback')
+      facebook_id = message['sender']['id']
+      sender = Sender.find_by_facebook_id facebook_id
+      sender = Sender.recreate(facebook_id) unless sender
       text = message['postback']['payload']
 
       message_handler = MessageHandler.new(facebook_id)
