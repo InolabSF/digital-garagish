@@ -11,7 +11,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160414215608) do
+ActiveRecord::Schema.define(version: 20160414215609) do
+
+  create_table "images", force: :cascade do |t|
+    t.string   "step_id"
+    t.string   "name"
+    t.string   "uri"
+    t.integer  "width"
+    t.integer  "height"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "senders", force: :cascade do |t|
     t.string   "facebook_id"

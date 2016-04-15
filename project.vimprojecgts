@@ -1,4 +1,5 @@
 project=/Users/kenzan8000/Dropbox/workspace/job/iSiD/digital-garagish CD=. filter="*.rb *.yml *.html *.css *.sass *.scss *.haml Gemfile .gitignore *.md *.json *.txt *.ru *.js Rakefile *.csv *.m *.h *.mm *.cc *.hpp *.cpp *.pch Podfile *.sh *.py .gitignore *.plist *.strings *.swift *.jade *.py *.erb *.slim" {
+ .gitignore
  Gemfile
  README.md
  cheat_sheet.md
@@ -35,6 +36,7 @@ project=/Users/kenzan8000/Dropbox/workspace/job/iSiD/digital-garagish CD=. filte
   }
   models=models {
    ability.rb
+   image.rb
    sender.rb
    step.rb
    user.rb
@@ -51,6 +53,9 @@ project=/Users/kenzan8000/Dropbox/workspace/job/iSiD/digital-garagish CD=. filte
     application.html.slim
    }
   }
+  uploaders=uploaders {
+   image_uploader.rb
+  }
  }
  config=config {
   application.rb
@@ -59,6 +64,7 @@ project=/Users/kenzan8000/Dropbox/workspace/job/iSiD/digital-garagish CD=. filte
   routes.rb
   database.yml
   secrets.yml
+  cloudinary.yml
   environments=environments {
    development.rb
    production.rb
@@ -82,12 +88,14 @@ project=/Users/kenzan8000/Dropbox/workspace/job/iSiD/digital-garagish CD=. filte
   }
  }
  db=db {
+  schema.rb
   seeds.rb
   migrate=migrate {
    20160414201105_create_senders.rb
    20160414201811_create_steps.rb
    20160414215306_devise_create_users.rb
    20160414215608_add_admin_to_user.rb
+   20160414215609_create_images.rb
   }
  }
  lib=lib {

@@ -13,6 +13,8 @@ gem 'faraday'                                                   # http client
 gem 'devise'                                                    # authentication
 gem 'cancan'                                                    # authentication
 gem 'rails_admin'                                               # admin
+gem 'carrierwave', github: 'carrierwaveuploader/carrierwave'    # uploader
+gem 'cloudinary'                                                # image-storage
 
 # front-end
 gem 'sass-rails', '~> 5.0'
