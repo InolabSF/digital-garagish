@@ -168,7 +168,7 @@ class MessageHandler
       end
     end
 
-    current_step.save if current_step.valid?
+    #current_step.save if current_step.valid?
   end
 
   # set current step
