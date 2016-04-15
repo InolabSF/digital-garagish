@@ -39,8 +39,9 @@ class MessageHandler
 
       title = 'Are you here?'
       subtitle = ''
-      @sender.steps.each { |step| subtitle = "(#{step.start_lat}, #{step.start_lng})" and break if step.id == @sender.current_step_id }
-
+      @sender.steps.each do |step|
+        subtitle = "(#{step.start_lat}, #{step.start_lng})" and break if step.id == @sender.current_step_id
+      end
       img_uri = 'https://dl.dropboxusercontent.com/u/30701586/images/digital-garagish/streetview.jpeg'
       message = "{ 'attachment':{ 'type':'template', 'payload':{ 'template_type':'generic', 'elements':[ { 'title':'#{title}', 'image_url':'#{img_uri}', 'subtitle':'#{subtitle}', 'buttons':[ { 'type':'postback', 'title':'Yes', 'payload':'Yes' }, { 'type':'postback', 'title':'No', 'payload':'No' }, { 'type':'postback', 'title':'Stop navigation', 'payload':'Stop navigation' } ] } ] } } }"
 
@@ -48,7 +49,9 @@ class MessageHandler
     when 2
       title = 'Let me know when you get there.'
       subtitle = ''
-      @sender.steps.each { |step| subtitle = "(#{step.end_lat}, #{step.end_lng})" and break if step.id == @sender.current_step_id }
+      @sender.steps.each do |step|
+        subtitle = "(#{step.end_lat}, #{step.end_lng})" and break if step.id == @sender.current_step_id
+      end
       img_uri = 'https://dl.dropboxusercontent.com/u/30701586/images/digital-garagish/streetview.jpeg'
       message = "{ 'attachment':{ 'type':'template', 'payload':{ 'template_type':'generic', 'elements':[ { 'title':'#{title}', 'image_url':'#{img_uri}', 'subtitle':'#{subtitle}', 'buttons':[ { 'type':'postback', 'title':'I got there', 'payload':'I got there' }, { 'type':'postback', 'title':'Stop navigation', 'payload':'Stop navigation' } ] } ] } } }"
 
