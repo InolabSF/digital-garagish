@@ -149,10 +149,11 @@ class MessageHandler
       name = "#{lat}_#{lng}_#{degree}"
 
       # upload image
-      uploader = ImageUploader.new
-      uploader.store!(image_file)
-      uri = uploader.url
-      next unless uri
+      #uploader = ImageUploader.new
+      #uploader.store!(image_file)
+      #uri = uploader.url
+      #next unless uri
+      uri = ActiveSupport::Base64.encode64(image_file)
 
       # create image
       image = Image.new
@@ -167,7 +168,7 @@ class MessageHandler
       end
     end
 
-    #current_step.save if current_step.valid?
+    current_step.save if current_step.valid?
   end
 
   # set current step
