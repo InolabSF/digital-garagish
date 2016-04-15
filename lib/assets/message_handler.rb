@@ -49,7 +49,7 @@ class MessageHandler
       title = 'Let me know when you get there.'
       subtitle = ''
       current_step = Step.find_by_id(@sender.current_step_id)
-      subtitle = "#{current_step.html_instructions}" if current_step
+      subtitle = "#{current_step.html_instructions} #{current_step.distance_text} #{current_step.duration_text}" if current_step
       img_uri = 'https://dl.dropboxusercontent.com/u/30701586/images/digital-garagish/streetview_01.jpeg'
       message = "{ 'attachment':{ 'type':'template', 'payload':{ 'template_type':'generic', 'elements':[ { 'title':'#{title}', 'image_url':'#{img_uri}', 'subtitle':'#{subtitle}', 'buttons':[ { 'type':'postback', 'title':'I got there', 'payload':'I got there' }, { 'type':'postback', 'title':'Stop navigation', 'payload':'Stop navigation' } ] } ] } } }"
 
