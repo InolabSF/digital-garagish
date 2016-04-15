@@ -30,6 +30,8 @@ class MessageHandler
       @sender.save if @sender.valid?
       json
     when 1
+      return nil if @sender.steps.count
+
       start_lat = 37.7844688
       start_lng = -122.4079864
       set_directions(start_lat, start_lng)
@@ -38,8 +40,7 @@ class MessageHandler
       title = 'Are you here?'
       subtitle = ''
       #current_step = Step.find_by_id(@sender.current_step_id)
-      #current_step = @sender.steps[@sender.current_step_id]
-      current_step = (@sender.current_step_id < @sender.steps.count) ? @sender.steps[@sender.current_step_id] : nil
+      current_step = @sender.steps[@sender.current_step_id]
       subtitle = "(#{current_step.start_lat}, #{current_step.start_lng})" if current_step
       img_uri = 'https://dl.dropboxusercontent.com/u/30701586/images/digital-garagish/streetview_00.jpeg'
       #img_uri = (current_step.images && current_step.images.count > 0) ? current_step.images[0].uri : ''
@@ -50,8 +51,7 @@ class MessageHandler
       title = 'Let me know when you get there.'
       subtitle = ''
       #current_step = Step.find_by_id(@sender.current_step_id)
-      #current_step = @sender.steps[@sender.current_step_id]
-      current_step = (@sender.current_step_id < @sender.steps.count) ? @sender.steps[@sender.current_step_id] : nil
+      current_step = @sender.steps[@sender.current_step_id]
       subtitle = "#{current_step.html_instructions} #{current_step.distance_text} #{current_step.duration_text}" if current_step
       img_uri = 'https://dl.dropboxusercontent.com/u/30701586/images/digital-garagish/streetview_01.jpeg'
       #img_uri = (current_step.images && current_step.images.count >= 2) ? current_step.images[1].uri : ''
@@ -136,8 +136,7 @@ class MessageHandler
   def set_streetview
     # current step
     #current_step = Step.find_by_id(@sender.current_step_id)
-    #current_step = @sender.steps[@sender.current_step_id]
-    current_step = (@sender.current_step_id < @sender.steps.count) ? @sender.steps[@sender.current_step_id] : nil
+    current_step = @sender.steps[@sender.current_step_id]
     return unless current_step
     return if current_step.images.count >= 2
 
