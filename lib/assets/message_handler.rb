@@ -188,7 +188,7 @@ class MessageHandler
       #  @sender.current_step_id = @sender.steps[index].id and break
       #end
       for i in 0..@sender.steps.count
-        next unless @sender.current_step_id == step.id
+        next unless @sender.current_step_id == @sender.steps[i].id
         index = i + 1
         # next navigation status
         @sender.navigation_status += 1 and break if index >= @sender.steps.count
