@@ -179,21 +179,22 @@ class MessageHandler
       @sender.current_step_id = @sender.steps.first.id
       @sender.save if @sender.valid?
     else
-      #index = nil
-      #for i in 0...@sender.steps.count
-      #  index = i+1 and break if @sender.steps[i].id == @sender.current_step_id
-      #end
-      #
-      #if index == nil
-      #  @sender.current_step_id = @sender.steps.last.id
-      #elsif index >= @sender.steps.count
-      #  @sender.navigation_status += 1
-      #else
-      #  @sender.current_step_id = @sender.steps[index].id
-      #end
-      @sender.current_step_id += 1
-      @sender.navigation_status += 1 if @sender.current_step_id > @sender.steps.last.id
-      @sender.save if @sender.valid?
+      index = nil
+      for i in 0...@sender.steps.count
+        index = i+1 and break if "#{@sender.steps[i].id}" == @sender.current_step_id
+      end
+
+      if index == nil
+        @sender.current_step_id = @sender.steps.last.id
+      elsif index >= @sender.steps.count
+        @sender.navigation_status += 1
+      else
+        @sender.current_step_id = @sender.steps[index].id
+      end
+
+      #@sender.current_step_id = "#{@sender.current_step_id.to_i + 1}"
+      #@sender.navigation_status += 1 if @sender.current_step_id > @sender.steps.last.id
+      #@sender.save if @sender.valid?
     end
     #set_streetview
     true
