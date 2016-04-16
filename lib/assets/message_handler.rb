@@ -168,7 +168,7 @@ class MessageHandler
       end
     end
 
-    #current_step.save if current_step.valid?
+    current_step.save if current_step.valid?
   end
 
   # set current step
@@ -194,7 +194,7 @@ class MessageHandler
       end
       @sender.save if @sender.valid?
     end
-    set_streetview
+    #set_streetview
 
     true
   end
