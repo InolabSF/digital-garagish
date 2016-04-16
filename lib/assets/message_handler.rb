@@ -153,7 +153,9 @@ class MessageHandler
       #uploader.store!(image_file)
       #uri = uploader.url
       #next unless uri
-      uri = ActiveSupport::Base64.encode64(image_file)
+
+      #uri = "data:image/jpeg;base64,#{Base64.encode64(image_file)}"
+      uri = CarrierStringIO.new(Base64.encode64(image_file))
 
       # create image
       image = Image.new
@@ -162,6 +164,7 @@ class MessageHandler
       image.width = width
       image.height = height
       image.step_id = current_step.id
+      puts image.valid?
       if image.valid?
         image.save
         current_step.images << image
@@ -194,7 +197,7 @@ class MessageHandler
       end
       @sender.save if @sender.valid?
     end
-    #set_streetview
+    set_streetview
 
     true
   end
