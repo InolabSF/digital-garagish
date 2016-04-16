@@ -149,22 +149,19 @@ class MessageHandler
       name = "#{lat}_#{lng}_#{degree}"
 
       # upload image
-      #uploader = ImageUploader.new
-      #uploader.store!(image_file)
-      #uri = uploader.url
-      #next unless uri
-
-      #uri = "data:image/jpeg;base64,#{Base64.encode64(image_file)}"
-      uri = CarrierStringIO.new(Base64.encode64(image_file))
+      data_uri = "data:image/jpeg;base64,#{Base64.encode64(image_file)}"
+      response = Cloudinary::Uploader.upload(data_uri)
+      uri = response['secure_url']
+      next unless uri
 
       # create image
       image = Image.new
-      image.uri = uri
+      image.remote_uri_url = uri
       image.name = name
       image.width = width
       image.height = height
       image.step_id = current_step.id
-      puts image.valid?
+
       if image.valid?
         image.save
         current_step.images << image
